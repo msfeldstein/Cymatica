@@ -2,7 +2,7 @@
   "name": "whatdidyouseewhenyoureyeswereopened",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
