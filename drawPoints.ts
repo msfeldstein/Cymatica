@@ -1,13 +1,14 @@
-import { Regl } from "regl";
+import { Framebuffer, Regl } from "regl";
 import { PingPongBuffer } from "./PingPongBuffer";
 
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
-export function drawPoints(regl: Regl, positions: PingPongBuffer) {
+export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuffer) {
   // @ts-ignore
   const dataSize = positions[0].width;
   // points is just an indexing array containing 1-N
   const points = new Array(dataSize * dataSize).fill(null).map((x, i) => i);
   return regl({
+    framebuffer: fbo,
     primitive: "points",
     blend: {
       enable: true,
