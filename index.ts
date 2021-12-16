@@ -33,6 +33,7 @@ const updateVelocity = DataStep(
   updateVelocityShader,
   {
     gravityCenter: regl.prop("gravityCenter"),
+    terminalVelocity: 10.0
   }
 );
 const updatePosition = DataStep(
