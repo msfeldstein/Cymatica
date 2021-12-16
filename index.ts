@@ -1,13 +1,13 @@
 import blur from "./blur";
 import blit, { fillRect } from "./blit"
 import { DataStep } from "./datastep";
-import { drawPoints } from "./drawPoints";
 import { random, randomDisc } from "./initializers/random";
 import { zero } from "./initializers/zero";
 import { makePingPongBuffer } from "./PingPongBuffer";
 import updatePositionShader from "./updatePosition.glsl";
 import updateVelocityShader from "./updateVelocity.glsl";
 import Regl from "regl"
+import { drawLines } from "./renderers/drawLines";
 const regl = Regl({ extensions: "oes_texture_float" });
 const RADIUS = 1024;
 
@@ -44,7 +44,7 @@ const updatePosition = DataStep(
   updatePositionShader
 );
 
-const draw = drawPoints(regl, positions, fbo);
+const draw = drawLines(regl, positions, fbo);
 const blitFbo = blit(regl, fboTex)
 const fade = fillRect(regl, fboTex)
 
