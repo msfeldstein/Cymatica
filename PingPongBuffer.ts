@@ -1,5 +1,31 @@
 import { Framebuffer2D, Regl, Texture, TextureImageData } from "regl"
-export class PingPongBuffer {
+
+export interface TextureProvider {
+  read() : Texture
+}
+
+export class StaticBuffer implements TextureProvider {
+  private texture : Texture
+  constructor(regl: Regl, width: number, height: number, data: TextureImageData | undefined = undefined) {
+    for (var i = 0; i < 2; i++) {
+      this.texture = regl.texture({
+        width,
+        height,
+        data: data,
+        type: 'float',
+        // We need nearest to ensure we don't interpolate between values
+        mag: 'nearest',
+        min: 'nearest',
+      })
+    }
+  }
+
+  read() {
+    return this.texture
+  }
+
+}
+export class PingPongBuffer implements TextureProvider {
   fbos: Framebuffer2D[] = []
   textures: Texture[] = []
   private swapped = false

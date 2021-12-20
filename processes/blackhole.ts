@@ -2,17 +2,25 @@ import { Regl } from "regl";
 import { DataStep } from "../datastep";
 import { randomDisc } from "../initializers/random";
 import { zero } from "../initializers/zero";
-import { PingPongBuffer } from "../PingPongBuffer";
+import { PingPongBuffer, StaticBuffer } from "../PingPongBuffer";
 import { drawLines } from "../renderers/drawLines";
 import { drawPoints } from "../renderers/drawPoints";
 import updatePositionShader from "../updatePosition.glsl";
 import updateVelocityShader from "../updateVelocity.glsl";
+import forceShader from "../steps/force.glsl";
+import { colorFromPos } from "../initializers/colorFromPos";
 
-export default function (regl: Regl, color: number[], terminalVelocity: number) {
+export default function (
+  regl: Regl,
+  color: number[],
+  terminalVelocity: number
+) {
   const RADIUS = 1024;
 
-  const positions = new PingPongBuffer(regl, RADIUS, RADIUS, randomDisc(RADIUS, 0.1));
+  const initialPositions = randomDisc(RADIUS, 0.1);
+  const positions = new PingPongBuffer(regl, RADIUS, RADIUS, initialPositions);
   const velocities = new PingPongBuffer(regl, RADIUS, RADIUS, zero(RADIUS));
+  const colors = colorFromPos(initialPositions)
 
   const updateVelocity = DataStep(
     regl,
@@ -41,6 +49,18 @@ export default function (regl: Regl, color: number[], terminalVelocity: number) 
       terminalVelocity,
     }
   );
+
+  const force = DataStep(
+    regl,
+    {
+      inputs: { positions, velocities },
+      output: velocities,
+    },
+    forceShader,
+    {
+      terminalVelocity,
+    }
+  );
   const updatePosition = DataStep(
     regl,
     {
@@ -50,7 +70,9 @@ export default function (regl: Regl, color: number[], terminalVelocity: number) 
     updatePositionShader
   );
 
-  const draw = drawPoints(regl, positions);
+  const draw = drawPoints(regl, positions, colors, {
+    pointSize: 1
+  });
 
   let mouse = [-4, -4];
   window.addEventListener("pointermove", (e) => {
@@ -59,6 +81,7 @@ export default function (regl: Regl, color: number[], terminalVelocity: number) 
   });
 
   return () => {
+    // force();
     updateVelocity({
       gravityCenter: mouse,
     });
@@ -67,7 +90,7 @@ export default function (regl: Regl, color: number[], terminalVelocity: number) 
     });
     updatePosition();
     draw({
-      color
+      color,
     });
   };
 }

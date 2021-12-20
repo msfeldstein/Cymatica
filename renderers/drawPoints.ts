@@ -1,21 +1,25 @@
 import { Framebuffer, Regl } from "regl";
-import { PingPongBuffer } from "./PingPongBuffer";
+import { StaticBuffer, TextureProvider } from "../PingPongBuffer";
+import { PingPongBuffer } from "../PingPongBuffer";
 
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
-export function drawPoints(regl: Regl, positions: PingPongBuffer) {
+export type DrawPointsOpts = {
+  pointSize?: number
+}
+export function drawPoints(regl: Regl, positions: PingPongBuffer, colors : Array<number>, opts: DrawPointsOpts = {}) {
   // @ts-ignore
-  const dataSize = positions.read().width;
+  const w = positions.read().width;
+  const h = positions.read().height
+
   // points is just an indexing array containing 1-N
-  const points = new Array(dataSize * dataSize).fill(null).map((x, i) => i);
+  const points = new Array(w * h).fill(null).map((x, i) => i);
   return regl({
     primitive: "points",
     blend: {
       enable: true,
       func: {
-        srcRGB: 'src alpha',
-        srcAlpha: 'src alpha',
-        dstRGB: 'one minus src alpha',
-        dstAlpha: 'one minus src alpha',
+        src: 'one',
+        dst: 'one',
       },
     },
     depth: {
@@ -23,37 +27,42 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer) {
     },
     frag: `
     precision mediump float;
-    uniform vec4 color;
+    varying vec4 vColor;
     void main() {
-      gl_FragColor = color;
+      gl_FragColor = vColor;
     }`,
 
     vert: `
       precision mediump float;
       attribute float index;
+      attribute vec4 color;
+      varying vec4 vColor;
       uniform float time;
       uniform sampler2D positions;
-      uniform float dataSize;
+      uniform float stride;
+      uniform float pointSize;
       
       void main() {
         vec2 posDataPosition = vec2(
-          mod(index, dataSize) / dataSize,
-          floor(index / dataSize) / dataSize
+          mod(index, stride) / stride,
+          floor(index / stride) / stride
         );
         vec4 pos = texture2D(positions, posDataPosition);
         gl_Position = pos;
-        gl_PointSize = 1.0;
+        vColor = color;
+        gl_PointSize = pointSize;
       }`,
 
     attributes: {
       index: regl.buffer(points),
+      color: regl.buffer(colors)
     },
 
     uniforms: {
       positions: () => positions.read(),
-      dataSize: dataSize,
-      color: regl.prop("color")
+      stride: w,
+      pointSize: opts.pointSize || 2,
     },
-    count: dataSize * dataSize
+    count: w * h
   });
 }
