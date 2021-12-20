@@ -11,19 +11,19 @@ export function DataStep(regl: Regl, opts: DatastepOpts, shader, uniforms = {}) 
     const inputs = {
       time: () => regl.now()
     }
-    console.log(opts.inputs)
 
     for (let key in opts.inputs) {
-
-      inputs[key] = ({tick}) =>opts.inputs[key][tick % 2]
-      inputs[key + 'Width'] = opts.inputs[key][0].width
-      inputs[key + 'Height'] = opts.inputs[key][0].height
+      inputs[key] = () => opts.inputs[key].read()
+      inputs[key + 'Width'] = opts.inputs[key].read().width
+      inputs[key + 'Height'] = opts.inputs[key].read().height
     }
-    console.log("U", Object.assign(inputs, uniforms))
   
     return regl({
       primitive: 'triangles',
-      framebuffer: ({tick}) => opts.output && opts.output[(tick + 1) % 2],
+      framebuffer: () => {
+        opts.output.swap()
+        return opts.output.write()
+      },
       vert: `
         precision mediump float;
         attribute vec2 position;

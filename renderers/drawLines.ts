@@ -6,16 +6,15 @@ import vert from "./drawLines.glsl"
 import frag from "./drawLinesFrag.glsl"
 console.log({frag})
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
-export function drawLines(regl: Regl, positions: PingPongBuffer, fbo: Framebuffer) {
+export function drawLines(regl: Regl, positions: PingPongBuffer) {
   // @ts-ignore
-  const dataSize = positions[0].width;
+  const dataSize = positions.read().width;
   // points is just an indexing array containing 1-N * 2 for start and end of each line
   const idx = new Array(dataSize * dataSize * 2).fill(null).map((x, i) => Math.floor(i / 2));
   // iterate between 0 and 1 for the start(0) and end(1) of each line
   const ends = new Array(dataSize * dataSize * 2).fill(null).map((x, i) => i % 2);
 
   return regl({
-    framebuffer: fbo,
     primitive: "lines",
     blend: {
       enable: true,
@@ -39,7 +38,7 @@ export function drawLines(regl: Regl, positions: PingPongBuffer, fbo: Framebuffe
     },
 
     uniforms: {
-      positions: ({ tick }) => positions[tick % 2],
+      positions: () => positions.read(),
       dataSize: dataSize
     },
     count: dataSize * dataSize

@@ -2,13 +2,12 @@ import { Framebuffer, Regl } from "regl";
 import { PingPongBuffer } from "./PingPongBuffer";
 
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
-export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuffer) {
+export function drawPoints(regl: Regl, positions: PingPongBuffer) {
   // @ts-ignore
-  const dataSize = positions[0].width;
+  const dataSize = positions.read().width;
   // points is just an indexing array containing 1-N
   const points = new Array(dataSize * dataSize).fill(null).map((x, i) => i);
   return regl({
-    framebuffer: fbo,
     primitive: "points",
     blend: {
       enable: true,
@@ -24,8 +23,9 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuff
     },
     frag: `
     precision mediump float;
+    uniform vec4 color;
     void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 0.2);
+      gl_FragColor = color;
     }`,
 
     vert: `
@@ -34,6 +34,7 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuff
       uniform float time;
       uniform sampler2D positions;
       uniform float dataSize;
+      
       void main() {
         vec2 posDataPosition = vec2(
           mod(index, dataSize) / dataSize,
@@ -41,7 +42,7 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuff
         );
         vec4 pos = texture2D(positions, posDataPosition);
         gl_Position = pos;
-        gl_PointSize = 2.0;
+        gl_PointSize = 1.0;
       }`,
 
     attributes: {
@@ -49,8 +50,9 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, fbo: Framebuff
     },
 
     uniforms: {
-      positions: ({ tick }) => positions[tick % 2],
-      dataSize: dataSize
+      positions: () => positions.read(),
+      dataSize: dataSize,
+      color: regl.prop("color")
     },
     count: dataSize * dataSize
   });
