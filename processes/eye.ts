@@ -1,10 +1,10 @@
 import { Regl } from "regl";
 import { blit } from "../blit";
-import { DataStep } from "../datastep";
+import { DataStep } from "../steps/datastep";
 import { initEye } from "../initializers/eye";
 import { randomDisc } from "../initializers/random";
 import { zero } from "../initializers/zero";
-import { PingPongBuffer } from "../PingPongBuffer";
+import { PingPongBuffer } from "../gl/Buffers";
 import { drawPoints } from "../renderers/drawPoints";
 import { drawLines } from "../renderers/drawLines";
 import updatePositionShader from "../updatePosition.glsl";

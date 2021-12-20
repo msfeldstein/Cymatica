@@ -1,6 +1,6 @@
 import { Framebuffer, Regl } from "regl";
-import { StaticBuffer, TextureProvider } from "../PingPongBuffer";
-import { PingPongBuffer } from "../PingPongBuffer";
+import { StaticBuffer, TextureProvider } from "../gl/Buffers";
+import { PingPongBuffer } from "../gl/Buffers";
 
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
 export type DrawPointsOpts = {

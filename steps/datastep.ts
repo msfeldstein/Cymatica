@@ -1,5 +1,5 @@
 import { Regl } from "regl"
-import { PingPongBuffer } from "./PingPongBuffer"
+import { PingPongBuffer } from "../gl/Buffers"
 // Step forward a set of fbos using a fragment shader with
 // previous data in a 'prevData' sampler
 

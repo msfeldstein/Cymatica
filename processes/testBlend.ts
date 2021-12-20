@@ -1,6 +1,6 @@
 import { Regl } from "regl";
 import { randomDisc } from "../initializers/random";
-import { PingPongBuffer, StaticBuffer } from "../PingPongBuffer";
+import { PingPongBuffer, StaticBuffer } from "../gl/Buffers";
 import { drawPoints } from "../renderers/drawPoints";
 
 export default function (

@@ -1,4 +1,4 @@
-import noise from '../noise'
+import noise from '../utils/noise'
 
 // each data point contains [r, theta, rand, 1]
 export function initEye(radius: number) {

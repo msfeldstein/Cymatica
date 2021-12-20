@@ -1,10 +1,9 @@
 import { Framebuffer, Regl } from "regl";
-import { PingPongBuffer } from "../PingPongBuffer";
+import { PingPongBuffer } from "../gl/Buffers";
 //@ts-ignore
 import vert from "./drawLines.glsl"
 // @ts-ignore
 import frag from "./drawLinesFrag.glsl"
-console.log({frag})
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
 export function drawLines(regl: Regl, positions: PingPongBuffer) {
   // @ts-ignore

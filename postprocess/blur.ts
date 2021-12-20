@@ -1,6 +1,7 @@
-import { Regl, Texture } from "regl"
+import { Regl } from "regl"
+import { TextureProvider } from "../gl/Buffers"
 
-export default function(regl: Regl, texture: Texture) {
+export default function(regl: Regl, texture: TextureProvider) {
     return regl({
       primitive: 'triangles',
       vert: `
@@ -24,7 +25,7 @@ export default function(regl: Regl, texture: Texture) {
         void main(){
             vec4 color=vec4(0.0);
             vec2 center= resolution / 2.0;
-            float strength = 0.1;
+            float strength = 0.03;
             float total=0.0;
             vec2 toCenter=center-uv*resolution;
             float offset=random(vec3(12.9898,78.233,151.7182),0.0);
@@ -47,7 +48,7 @@ export default function(regl: Regl, texture: Texture) {
       },
 
       uniforms: {
-          texture: texture,
+          texture: regl.prop("texture"),
           resolution: regl.prop("resolution")
       },
   

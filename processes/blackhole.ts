@@ -1,12 +1,12 @@
 import { Regl } from "regl";
-import { DataStep } from "../datastep";
+import { DataStep } from "../steps/datastep";
 import { randomDisc } from "../initializers/random";
 import { zero } from "../initializers/zero";
-import { PingPongBuffer, StaticBuffer } from "../PingPongBuffer";
+import { PingPongBuffer, StaticBuffer } from "../gl/Buffers";
 import { drawLines } from "../renderers/drawLines";
 import { drawPoints } from "../renderers/drawPoints";
-import updatePositionShader from "../updatePosition.glsl";
-import updateVelocityShader from "../updateVelocity.glsl";
+import updatePositionShader from "../steps/updatePosition.glsl";
+import updateVelocityShader from "../steps/updateVelocity.glsl";
 import forceShader from "../steps/force.glsl";
 import { colorFromPos } from "../initializers/colorFromPos";
 
