@@ -6,6 +6,7 @@ import { PingPongBuffer } from "./gl/Buffers";
 import blackhole from "./processes/blackhole";
 import eye from "./processes/eye";
 import testBlend from "./processes/testBlend";
+import sacred from "./processes/sacredgeometry"
 
 const regl = Regl({ extensions: "oes_texture_float" });
 
@@ -14,7 +15,8 @@ const fbo = new PingPongBuffer(regl, window.innerWidth, window.innerHeight);
 const blitFbo = blit(regl);
 const blurFbo = blur(regl, fbo);
 // const draw = eye(regl)
-const draw = blackhole(regl, [1.0, 1.0, 1.0, 0.4], 15);
+// const draw = blackhole(regl, [1.0, 1.0, 1.0, 0.4], 15);
+const draw = sacred(regl)
 // const draw = testBlend(regl)
 
 regl.frame(() => {
