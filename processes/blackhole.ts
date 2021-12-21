@@ -50,17 +50,7 @@ export default function (
     }
   );
 
-  const force = DataStep(
-    regl,
-    {
-      inputs: { positions, velocities },
-      output: velocities,
-    },
-    forceShader,
-    {
-      terminalVelocity,
-    }
-  );
+
   const updatePosition = DataStep(
     regl,
     {
@@ -81,7 +71,6 @@ export default function (
   });
 
   return () => {
-    // force();
     updateVelocity({
       gravityCenter: mouse,
     });
