@@ -13,3 +13,13 @@ One example of this is [updating the velocity, and then position](/processes/bla
 Once all the buffers have new particle attribute data we just [draw them to the screen as points](/processes/blackhole.ts#L63-L65), or we can use that data to draw something more complicated, like [lines that stretch out from the center](/main/renderers/drawLines.ts).  Right now it just draws in 2d but could easily be expanded to 3d.
 
 We can also do optional post-processing for [zoom-blur](/postprocess/blur.ts) or [trails](/index.ts#L27-L30).
+
+## Buffer representation
+
+Particle information is stored in an image float-texture with each pixel representing values for the particle at that index.
+
+These buffers are either [standard textures](/gl/Buffers.ts#L7-L25) for unchanging data, or [ping-pong buffers](/gl/Buffers.ts#L28-L71) for textures that change.  Ping-pong buffers are a technique used when you need to read in from a buffer in order to write new values to itself.  Since you can't read a texture while you're writing to it, we represent it with two textures, and read from the old values texture while writing into the new texture.
+
+## Datastep representation
+
+In userspace, datasteps get written as shaders
