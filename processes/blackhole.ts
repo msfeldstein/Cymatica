@@ -60,8 +60,9 @@ export default function (
     updatePositionShader
   );
 
-  const draw = drawPoints(regl, positions, colors, {
-    pointSize: 1
+  const draw = drawPoints(regl, positions, {
+    pointSize: 1,
+    colors
   });
 
   let mouse = [-4, -4];

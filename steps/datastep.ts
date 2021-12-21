@@ -1,10 +1,10 @@
 import { Regl } from "regl"
-import { PingPongBuffer } from "../gl/Buffers"
+import { PingPongBuffer, TextureProvider } from "../gl/Buffers"
 // Step forward a set of fbos using a fragment shader with
 // previous data in a 'prevData' sampler
 
 export type DatastepOpts = {
-    inputs: {[key: string]: PingPongBuffer},
+    inputs: {[key: string]: TextureProvider},
     output: PingPongBuffer
 }
 export function DataStep(regl: Regl, opts: DatastepOpts, shader, uniforms = {}) {

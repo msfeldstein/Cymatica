@@ -5,14 +5,17 @@ import { PingPongBuffer } from "../gl/Buffers";
 // positions is an FBO containing the x,y,vx,vy of each particle in a float pixel
 export type DrawPointsOpts = {
   pointSize?: number
+  colors?: Array<number>
+  count?: number
 }
-export function drawPoints(regl: Regl, positions: PingPongBuffer, colors : Array<number>, opts: DrawPointsOpts = {}) {
+export function drawPoints(regl: Regl, positions: PingPongBuffer, opts: DrawPointsOpts = {}) {
   // @ts-ignore
   const w = positions.read().width;
   const h = positions.read().height
+  const l = opts.count || w * h
 
   // points is just an indexing array containing 1-N
-  const points = new Array(w * h).fill(null).map((x, i) => i);
+  const points = new Array(l).fill(null).map((x, i) => i);
   return regl({
     primitive: "points",
     blend: {
@@ -55,7 +58,7 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, colors : Array
 
     attributes: {
       index: regl.buffer(points),
-      color: regl.buffer(colors)
+      color: regl.buffer(opts.colors)
     },
 
     uniforms: {
@@ -63,6 +66,6 @@ export function drawPoints(regl: Regl, positions: PingPongBuffer, colors : Array
       stride: w,
       pointSize: opts.pointSize || 2,
     },
-    count: w * h
+    count: l
   });
 }

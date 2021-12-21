@@ -16,6 +16,7 @@ export class StaticBuffer implements TextureProvider {
         // We need nearest to ensure we don't interpolate between values
         mag: 'nearest',
         min: 'nearest',
+        wrap: "clamp"
       })
     }
   }
