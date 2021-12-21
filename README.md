@@ -16,10 +16,6 @@ We can also do optional post-processing for [zoom-blur](/postprocess/blur.ts) or
 
 ## Buffer representation
 
-Particle information is stored in an image float-texture with each pixel representing values for the particle at that index.
+Particle information is stored in an image float-texture with each pixel representing up to 3 values for the particle at that index.
 
 These buffers are either [standard textures](/gl/Buffers.ts#L7-L25) for unchanging data, or [ping-pong buffers](/gl/Buffers.ts#L28-L71) for textures that change.  Ping-pong buffers are a technique used when you need to read in from a buffer in order to write new values to itself.  Since you can't read a texture while you're writing to it, we represent it with two textures, and read from the old values texture while writing into the new texture.
-
-## Datastep representation
-
-In userspace, datasteps get written as shaders
